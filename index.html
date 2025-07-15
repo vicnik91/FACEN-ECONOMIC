@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Curricular Economía UNAP</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f0f0; padding: 20px; }
+    h1 { text-align: center; }
+    .ciclo { margin-bottom: 40px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #e0e0e0; }
+    .fucsia { background-color: #f8b1ff; }
+    .rosado { background-color: #ffc5d0; }
+    .morado { background-color: #cba0ff; }
+    .lila { background-color: #e3ccff; }
+    .tachado { text-decoration: line-through; opacity: 0.5; }
+  </style>
+</head>
+<body>
+  <h1>Malla Curricular - Economía UNAP</h1>
+  <div id="tabla"></div>
+  <p><strong>Total de créditos aprobados:</strong> <span id="conteo-creditos">0</span></p>
+
+  <script>
+    const tabla = document.getElementById('tabla');
+    const conteo = document.getElementById('conteo-creditos');
+
+    const malla = JSON.parse(localStorage.getItem('mallaEstado')) || {
+      "Ciclo 1": [
+        { nombre: "MATEMÁTICA", creditos: 4, tipo: "rosado", prerequisito: "-" },
+        { nombre: "DERECHO CONSTITUCIONAL Y DERECHOS HUMANOS", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "NATACION", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "FUNDAMENTOS DE ADMINISTRACION", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "LENGUAJE, REDACCIÓN Y ORATORIA", creditos: 4, tipo: "rosado", prerequisito: "-" },
+        { nombre: "FILOSOFIA", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "VOLEIBOL", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "CREATIVIDAD E INNOVACION EMPRESARIAL", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "GIMNASIA", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "INGLES BÁSICO I", creditos: 2, tipo: "lila", prerequisito: "-" },
+        { nombre: "FUTBOL", creditos: 1, tipo: "lila", prerequisito: "-" }
+      ],
+      "Ciclo 2": [
+        { nombre: "TEATRO", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "MATEMATICA II", creditos: 4, tipo: "rosado", prerequisito: "MATEMÁTICA" },
+        { nombre: "ORATORIA", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "FUNDAMENTOS DE CONTABILIDAD", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "FUNDAMENTOS DE ECONOMIA", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "PRIMEROS AUXILIOS", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "BASQUETBOL", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "FOLKLORE", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "INGLES BÁSICO II", creditos: 2, tipo: "lila", prerequisito: "INGLES BÁSICO I" },
+        { nombre: "DEFENSA PERSONAL", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "REALIDAD NACIONAL Y DESARROLLO REGIONAL AMAZÓNICO", creditos: 4, tipo: "rosado", prerequisito: "-" },
+        { nombre: "DANZAS", creditos: 1, tipo: "lila", prerequisito: "-" },
+        { nombre: "METODOLOGÍA DE LA INVESTIGACIÓN CIENTÍFICA", creditos: 3, tipo: "rosado", prerequisito: "-" }
+      ]
+      "Ciclo 3": [
+        { nombre: "MICROECONOMIA", creditos: 4, tipo: "fucsia", prerequisito: "FUNDAMENTOS DE ECONOMIA" },
+        { nombre: "MATEMATICA III", creditos: 4, tipo: "rosado", prerequisito: "MATEMATICA II" },
+        { nombre: "ESTADISTICA I", creditos: 4, tipo: "rosado", prerequisito: "MATEMATICA II" },
+        { nombre: "COSTO Y PRESUPUESTO EMPRESARIAL", creditos: 3, tipo: "rosado", prerequisito: "FUNDAMENTOS DE CONTABILIDAD" },
+        { nombre: "DOCTRINAS ECONOMICAS", creditos: 3, tipo: "rosado", prerequisito: "FUNDAMENTOS DE ECONOMIA" },
+        { nombre: "HISTORIA ECONOMICA DEL PERU", creditos: 3, tipo: "rosado", prerequisito: "-" }
+      ],
+      "Ciclo 4": [
+        { nombre: "SOCIOLOGIA", creditos: 2, tipo: "rosado", prerequisito: "FILOSOFIA" },
+        { nombre: "CONTABILIDAD GERENCIAL", creditos: 3, tipo: "rosado", prerequisito: "COSTO Y PRESUPUESTO EMPRESARIAL" },
+        { nombre: "ESTADISTICA II", creditos: 4, tipo: "rosado", prerequisito: "ESTADISTICA I" },
+        { nombre: "MATEMATICA FINANCIERA", creditos: 4, tipo: "rosado", prerequisito: "MATEMATICA II" },
+        { nombre: "ANALISIS MICROECONOMICO", creditos: 4, tipo: "fucsia", prerequisito: "MICROECONOMIA" },
+        { nombre: "MATEMATICA IV", creditos: 4, tipo: "rosado", prerequisito: "MATEMATICA III" }
+      ],
+      "Ciclo 5": [
+        { nombre: "ANALISIS Y GESTION DE RIESGO", creditos: 3, tipo: "rosado", prerequisito: "MATEMATICA IV" },
+        { nombre: "TEORIA DE LA REGULACION ECONOMICA", creditos: 4, tipo: "fucsia", prerequisito: "ANALISIS MICROECONOMICO" },
+        { nombre: "PROGRAMAS INFORMATICOS PARA LA ECONOMIA", creditos: 4, tipo: "rosado", prerequisito: "ESTADISTICA II" },
+        { nombre: "ECONOMIA DE RECURSOS NATURALES Y MEDIO AMBIENTE", creditos: 4, tipo: "fucsia", prerequisito: "ANALISIS MICROECONOMICO" },
+        { nombre: "RESPONSABILIDAD SOCIAL", creditos: 2, tipo: "rosado", prerequisito: "-" },
+        { nombre: "MACROECONOMIA", creditos: 4, tipo: "fucsia", prerequisito: "FUNDAMENTOS DE ECONOMIA" }
+      ],
+      "Ciclo 6": [
+        { nombre: "ANALISIS MACROECONOMICO", creditos: 4, tipo: "fucsia", prerequisito: "MACROECONOMIA" },
+        { nombre: "ECONOMIA DEL CAPITAL HUMANO Y DEL EMPLEO", creditos: 3, tipo: "fucsia", prerequisito: "MACROECONOMIA" },
+        { nombre: "DEONTOLOGIA PROFESIONAL", creditos: 3, tipo: "rosado", prerequisito: "-" },
+        { nombre: "OPTIMIZACION ECONOMICA", creditos: 4, tipo: "rosado", prerequisito: "MATEMATICA IV" },
+        { nombre: "INVESTIGACION DE MERCADOS", creditos: 4, tipo: "rosado", prerequisito: "PROGRAMAS INFORMATICOS PARA LA ECONOMIA" },
+        { nombre: "ECONOMETRIA I", creditos: 4, tipo: "rosado", prerequisito: "ESTADISTICA II" }
+      ],
+      "Ciclo 7": [
+        { nombre: "ECONOMIA FINANCIERA", creditos: 4, tipo: "fucsia", prerequisito: "CONTABILIDAD GERENCIAL" },
+        { nombre: "FINANZAS CORPORATIVAS", creditos: 3, tipo: "rosado", prerequisito: "ANALISIS Y GESTION DE RIESGO" },
+        { nombre: "TEORIA MONETARIA", creditos: 4, tipo: "fucsia", prerequisito: "ANALISIS MACROECONOMICO" },
+        { nombre: "ECONOMETRIA II", creditos: 4, tipo: "rosado", prerequisito: "ECONOMETRIA I" },
+        { nombre: "SEMINARIO DE CUENTAS NACIONALES", creditos: 3, tipo: "rosado", prerequisito: "MACROECONOMIA" },
+        { nombre: "FORMULACION Y EVALUACION DE PROYECTOS I", creditos: 4, tipo: "rosado", prerequisito: "INVESTIGACION DE MERCADOS" },
+        { nombre: "DERECHO ECONOMICO", creditos: 3, tipo: "rosado", prerequisito: "DERECHO CONSTITUCIONAL Y DERECHOS HUMANOS" }
+      ],
+      "Ciclo 8": [
+        { nombre: "PLANIFICACION ESTRATEGICA", creditos: 4, tipo: "rosado", prerequisito: "ANALISIS MACROECONOMICO" },
+        { nombre: "MACROECONOMIA DINAMICA", creditos: 4, tipo: "fucsia", prerequisito: "OPTIMIZACION ECONOMICA" },
+        { nombre: "FINANZAS PUBLICAS", creditos: 3, tipo: "fucsia", prerequisito: "TEORIA MONETARIA" },
+        { nombre: "TEORIA DEL CRECIMIENTO Y DESARROLLO", creditos: 4, tipo: "fucsia", prerequisito: "ANALISIS MACROECONOMICO" },
+        { nombre: "SEMINARIO DE BANCA Y DE SEGUROS", creditos: 3, tipo: "rosado", prerequisito: "ANALISIS Y GESTION DE RIESGO" },
+        { nombre: "FORMULACION Y EVALUACION DE PROYECTOS II", creditos: 4, tipo: "rosado", prerequisito: "FORMULACION Y EVALUACION DE PROYECTOS I" },
+        { nombre: "TOPICOS DE ECONOMETRIA", creditos: 3, tipo: "rosado", prerequisito: "ECONOMETRIA II" }
+      ],
+      "Ciclo 9": [
+        { nombre: "SEMINARIO DE ECONOMIA TRIBUTARIA", creditos: 3, tipo: "rosado", prerequisito: "ECONOMIA FINANCIERA" },
+        { nombre: "COMERCIO INTERNACIONAL", creditos: 4, tipo: "fucsia", prerequisito: "ANALISIS MACROECONOMICO" },
+        { nombre: "SEMINARIO DE TENDENCIAS Y PERSPECTIVAS ECONOMICAS", creditos: 2, tipo: "rosado", prerequisito: "TEORIA DEL CRECIMIENTO Y DESARROLLO" },
+        { nombre: "SEMINARIO DE DEMOGRAFIA Y REALIDAD SOCIOECONOMICAS", creditos: 3, tipo: "rosado", prerequisito: "MACROECONOMIA" },
+        { nombre: "SEMINARIO DE TESIS", creditos: 4, tipo: "rosado", prerequisito: "METODOLOGÍA DE LA INVESTIGACIÓN CIENTÍFICA" },
+        { nombre: "POLITICA ECONOMICA", creditos: 4, tipo: "fucsia", prerequisito: "PLANIFICACION ESTRATEGICA" }
+      ],
+      "Ciclo 10": [
+        { nombre: "TRABAJO DE INVESTIGACIÓN", creditos: 5, tipo: "rosado", prerequisito: "SEMINARIO DE TESIS" },
+        { nombre: "ECONOMIA REGIONAL", creditos: 3, tipo: "fucsia", prerequisito: "COMERCIO INTERNACIONAL" },
+        { nombre: "PRACTICA PRE PROFESIONAL", creditos: 5, tipo: "rosado", prerequisito: "-" },
+        { nombre: "ECONOMIA Y GESTION PUBLICA", creditos: 4, tipo: "rosado", prerequisito: "POLITICA ECONOMICA" }
+      ]
+    };
+
+    renderMalla();
+
+    function renderMalla() {
+      tabla.innerHTML = "";
+      let total = 0;
+      for (const ciclo in malla) {
+        const cursos = malla[ciclo];
+        const div = document.createElement("div");
+        div.className = "ciclo";
+        const table = document.createElement("table");
+        let html = `<thead><tr><th colspan="4">${ciclo}</th></tr>
+                    <tr><th>Curso</th><th>Créditos</th><th>Tipo</th><th>Prerrequisitos</th></tr></thead><tbody>`;
+        cursos.forEach((curso, idx) => {
+          const estado = curso.tachado ? "tachado" : "";
+          html += `<tr class="${curso.tipo} ${estado}" data-ciclo="${ciclo}" data-idx="${idx}">
+                      <td>${curso.nombre}</td>
+                      <td>${curso.creditos}</td>
+                      <td>${curso.tipo}</td>
+                      <td>${curso.prerequisito}</td>
+                   </tr>`;
+          if (curso.tachado) total += curso.creditos;
+        });
+        html += "</tbody>";
+        table.innerHTML = html;
+        div.appendChild(table);
+        tabla.appendChild(div);
+      }
+      conteo.textContent = total;
+
+      document.querySelectorAll("tr[data-ciclo]").forEach(fila => {
+        fila.addEventListener("click", () => {
+          const ciclo = fila.dataset.ciclo;
+          const idx = fila.dataset.idx;
+          malla[ciclo][idx].tachado = !malla[ciclo][idx].tachado;
+          localStorage.setItem("mallaEstado", JSON.stringify(malla));
+          renderMalla();
+        });
+      });
+    }
+  </script>
+</body>
+</html>
